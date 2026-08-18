@@ -10,8 +10,8 @@ Codex Doctor is a local, read-only Codex skill that explains quota windows, cont
 ## What it reports
 
 - Every quota bucket and window returned by Codex, without assuming a fixed 5-hour or weekly layout.
-- Remaining quota, reset times, and window-average burn projections.
-- Active context pressure using Codex's current-session token snapshot.
+- Remaining quota as a fixed-width horizontal meter, plus reset times and window-average burn projections.
+- Active context pressure with the same remaining-capacity meter and Codex's current-session token snapshot.
 - Session age, active model, reasoning level, and cumulative session token activity.
 - Explicitly scoped recommendations that keep unavailable data unavailable.
 

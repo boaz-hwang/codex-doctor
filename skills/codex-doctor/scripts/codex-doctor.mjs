@@ -370,7 +370,7 @@ export async function fetchAppServerData({ env = process.env } = {}) {
         clientInfo: {
           name: "codex_doctor",
           title: "Codex Doctor",
-          version: "0.1.0",
+          version: "0.2.0",
         },
         capabilities: { experimentalApi: false },
       },
@@ -919,8 +919,22 @@ function progressBar(remainingPercent) {
   return `${"█".repeat(filled)}${"░".repeat(segments - filled)}`;
 }
 
+function progressRow(remainingPercent) {
+  const percent = Math.round(clamp(remainingPercent, 0, 100));
+  return `  ${progressBar(percent)}  ${String(percent).padStart(3)}% remaining`;
+}
+
+function detailRow(label, value) {
+  return `  ${label.padEnd(16)} ${value}`;
+}
+
+function section(lines, title) {
+  lines.push("");
+  lines.push(title.toUpperCase());
+}
+
 function formatRate(projection, durationMinutes) {
-  if (!projection) return "pace unavailable";
+  if (!projection) return "Unavailable";
   if ((durationMinutes || 0) >= 24 * 60) {
     return `${(projection.ratePercentPerHour * 24).toFixed(1)}%/day`;
   }
@@ -928,91 +942,132 @@ function formatRate(projection, durationMinutes) {
 }
 
 export function renderReport(report, nowMs = Date.parse(report.generatedAt)) {
-  const lines = ["CODEX DOCTOR", "", "Usage"];
+  const lines = [
+    "CODEX DOCTOR",
+    "─".repeat(48),
+    "",
+    "USAGE · REMAINING QUOTA",
+  ];
   if (report.buckets.length === 0) {
-    lines.push("- Unavailable");
+    lines.push("  Unavailable");
   } else {
     for (const bucket of report.buckets) {
+      const windows = bucket.windows || [];
       if (bucket.spendControlReached === true) {
-        lines.push(`- ${bucket.name}: spend control reached`);
+        lines.push(bucket.name, "  ! Spend control reached");
       } else if (bucket.rateLimitReachedType !== null) {
-        lines.push(`- ${bucket.name}: limit reached (${bucket.rateLimitReachedType})`);
+        lines.push(bucket.name, `  ! Limit reached (${bucket.rateLimitReachedType})`);
       }
-      for (const window of bucket.windows) {
+      for (const window of windows) {
         const resetText =
           window.resetsAt === null
-            ? "reset unknown"
-            : `resets in ${formatDuration(window.resetsAt - nowMs / 1_000)} (${formatTimestamp(window.resetsAt)})`;
-        lines.push(
-          `- ${bucket.name} ${window.label.padEnd(7)} ${progressBar(window.remainingPercent)} ${Math.round(window.remainingPercent)}% remaining · ${resetText}`,
-        );
+            ? "Unknown"
+            : `${formatDuration(window.resetsAt - nowMs / 1_000)} · ${formatTimestamp(window.resetsAt)}`;
+        lines.push(`${bucket.name} · ${window.label}`);
+        lines.push(progressRow(window.remainingPercent));
+        lines.push(detailRow("Reset", resetText));
       }
     }
   }
-  if (report.resetCredits !== null) {
-    lines.push(`- Earned resets: ${numberFormatter.format(report.resetCredits)} available`);
+  const hasTokenActivity = finiteNumber(report.tokenActivity?.latestSevenDaysAverage) !== null;
+  if (report.resetCredits !== null || hasTokenActivity) {
+    section(lines, "Account");
   }
-  if (finiteNumber(report.tokenActivity?.latestSevenDaysAverage) !== null) {
+  if (report.resetCredits !== null) {
     lines.push(
-      `- Token activity (not quota): ${numberFormatter.format(report.tokenActivity.latestSevenDaysTokens)} over the latest 7 reported days (${numberFormatter.format(report.tokenActivity.latestSevenDaysAverage)}/day avg)`,
+      detailRow("Earned resets", `${numberFormatter.format(report.resetCredits)} available`),
+    );
+  }
+  if (hasTokenActivity) {
+    lines.push(
+      detailRow(
+        "Token activity",
+        `${numberFormatter.format(report.tokenActivity.latestSevenDaysTokens)} over the latest 7 reported days · not quota`,
+      ),
+      detailRow(
+        "7-day average",
+        `${numberFormatter.format(report.tokenActivity.latestSevenDaysAverage)}/day`,
+      ),
     );
   }
 
-  lines.push("", "Session");
+  section(lines, "Session");
   if (!report.session?.available) {
-    lines.push("- Unavailable");
+    lines.push("  Unavailable");
   } else {
     if (report.session.context) {
+      lines.push("Context");
+      lines.push(progressRow(report.session.context.remainingPercent));
       lines.push(
-        `- Context snapshot: ${report.session.context.remainingPercent}% remaining after Codex's ${numberFormatter.format(BASELINE_TOKENS)}-token baseline (${numberFormatter.format(report.session.context.activeTokens)} active / ${numberFormatter.format(report.session.context.windowTokens)} window)`,
+        detailRow(
+          "Active",
+          `${numberFormatter.format(report.session.context.activeTokens)} / ${numberFormatter.format(report.session.context.windowTokens)} tokens`,
+        ),
+        detailRow(
+          "Baseline",
+          `${numberFormatter.format(BASELINE_TOKENS)} tokens reserved by Codex`,
+        ),
       );
     } else {
-      lines.push("- Context: unavailable");
+      lines.push(detailRow("Context", "Unavailable"));
     }
-    lines.push(`- Age: ${formatDuration(report.session.ageSeconds)}`);
-    lines.push(`- Model: ${report.session.model || "unknown"}`);
-    lines.push(`- Reasoning: ${report.session.reasoningEffort || "unknown"}`);
+    lines.push(
+      detailRow("Age", formatDuration(report.session.ageSeconds)),
+      detailRow("Model", report.session.model || "unknown"),
+      detailRow("Reasoning", report.session.reasoningEffort || "unknown"),
+    );
     if (report.session.totalUsage) {
       lines.push(
-        `- Session tokens: ${numberFormatter.format(report.session.totalUsage.totalTokens)} cumulative (${numberFormatter.format(report.session.totalUsage.cachedInputTokens)} cached input)`,
+        detailRow(
+          "Session tokens",
+          `${numberFormatter.format(report.session.totalUsage.totalTokens)} cumulative`,
+        ),
+        detailRow(
+          "Cached input",
+          numberFormatter.format(report.session.totalUsage.cachedInputTokens),
+        ),
       );
     }
   }
 
-  lines.push("", "Burn pace (window average)");
+  section(lines, "Burn pace · window average");
   const windows = report.buckets.flatMap((bucket) =>
-    bucket.windows.map((window) => ({ bucket, window })),
+    (bucket.windows || []).map((window) => ({ bucket, window })),
   );
   if (windows.length === 0) {
-    lines.push("- Unavailable");
+    lines.push("  Unavailable");
   } else {
     for (const { bucket, window } of windows) {
-      let projection = "";
+      let projection = "Unavailable";
       if (window.projection) {
         const exhaustsAtMs = Date.parse(window.projection.exhaustsAt);
         projection = window.projection.beforeReset
-          ? ` · projected exhaustion in ${formatDuration((exhaustsAtMs - nowMs) / 1_000)}`
-          : " · projected to last through reset";
+          ? `Exhaustion in ${formatDuration((exhaustsAtMs - nowMs) / 1_000)}`
+          : "Projected to last through reset";
       }
       lines.push(
-        `- ${bucket.name} ${window.label}: ${formatRate(window.projection, window.durationMinutes)}${projection}`,
+        `${bucket.name} · ${window.label}`,
+        detailRow("Pace", formatRate(window.projection, window.durationMinutes)),
+        detailRow("Projection", projection),
       );
     }
   }
 
-  lines.push("", "Diagnosis");
-  const severityMark = { critical: "!", warning: "!", info: "i", ok: "✓" };
+  section(lines, "Diagnosis");
+  const severityMark = { critical: "!", warning: "⚠", info: "i", ok: "✓" };
   for (const diagnosis of report.diagnoses) {
-    lines.push(`- ${severityMark[diagnosis.severity] || "-"} ${diagnosis.message}`);
+    lines.push(`${severityMark[diagnosis.severity] || "·"} ${diagnosis.message}`);
   }
 
-  lines.push("", "Suggested action");
-  report.recommendations.forEach((recommendation, index) => {
-    lines.push(`${index + 1}. ${recommendation}`);
+  section(lines, "Suggested action");
+  report.recommendations.forEach((recommendation) => {
+    lines.push(`→ ${recommendation}`);
   });
 
-  lines.push("", "Data quality");
-  for (const item of report.dataQuality) lines.push(`- ${item}`);
+  section(lines, "Data quality");
+  for (const item of report.dataQuality) {
+    lines.push(`· ${item}`);
+  }
   return lines.join("\n");
 }
 

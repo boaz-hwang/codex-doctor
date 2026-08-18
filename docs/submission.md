@@ -1,6 +1,6 @@
 # OpenAI Plugin Submission Notes
 
-Prepared for the skills-only Codex Doctor plugin, version 0.1.0.
+Prepared for the skills-only Codex Doctor plugin, version 0.2.0.
 
 ## Listing
 
@@ -33,7 +33,7 @@ Prepared for the skills-only Codex Doctor plugin, version 0.1.0.
 
 - **Prompt:** Show every Codex quota bucket and tell me when each one resets.
 - **Expected behavior:** Preserve every returned limit ID and window duration; do not assume fixed primary or secondary meanings.
-- **Expected result:** One line per observed bucket/window with a duration-derived label and reset timestamp.
+- **Expected result:** One meter block per observed bucket/window with a duration-derived label, remaining percentage, and reset timestamp.
 - **Fixture:** A rate-limit response containing one or more buckets; a single-window response is valid.
 
 ### 3. Session context decision
@@ -79,6 +79,6 @@ Prepared for the skills-only Codex Doctor plugin, version 0.1.0.
 
 ## Initial release notes
 
-Initial skills-only submission of Codex Doctor 0.1.0. The plugin reads official Codex app-server account endpoints, inspects only the active local session for session-health metadata, supports dynamic multi-bucket quota windows, distinguishes token activity from quota, and returns evidence-scoped recommendations. No MCP server or reviewer credentials are required.
+Initial skills-only submission of Codex Doctor 0.2.0. The plugin reads official Codex app-server account endpoints, inspects only the active local session for session-health metadata, supports dynamic multi-bucket quota windows, renders quota and context as fixed 10-cell remaining-capacity meters, distinguishes token activity from quota, and returns evidence-scoped recommendations. No MCP server or reviewer credentials are required.
 
 The real output screenshot is published in the GitHub README only. It is intentionally not included as a submission screenshot because this skills-only plugin has no custom MCP UI.

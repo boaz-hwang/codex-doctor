@@ -487,8 +487,107 @@ test("renders unavailable fields explicitly", () => {
     recommendations: ["Continue."],
     dataQuality: ["Rate limits are unavailable."],
   });
-  assert.match(output, /Usage\n- Unavailable/);
-  assert.match(output, /Session\n- Unavailable/);
+  assert.match(output, /USAGE · REMAINING QUOTA\n  Unavailable/);
+  assert.match(output, /SESSION\n  Unavailable/);
+});
+
+test("renders horizontal remaining-capacity bars for quota and context", () => {
+  const output = renderReport({
+    generatedAt: "2026-08-18T00:00:00.000Z",
+    buckets: [
+      {
+        id: "codex",
+        name: "Codex",
+        rateLimitReachedType: null,
+        spendControlReached: false,
+        windows: [
+          {
+            label: "5h",
+            remainingPercent: 72,
+            resetsAt: null,
+            durationMinutes: 300,
+            projection: null,
+          },
+        ],
+      },
+    ],
+    resetCredits: null,
+    tokenActivity: null,
+    session: {
+      available: true,
+      context: {
+        activeTokens: 48_000,
+        windowTokens: 258_400,
+        remainingPercent: 84,
+      },
+      ageSeconds: 60,
+      model: "gpt-test",
+      reasoningEffort: "medium",
+      totalUsage: null,
+    },
+    diagnoses: [{ severity: "ok", message: "No immediate pressure." }],
+    recommendations: ["Continue."],
+    dataQuality: ["Synthetic test."],
+  });
+  const quotaLine = output.split("\n").find((line) => line.includes("72% remaining"));
+  const contextLine = output.split("\n").find((line) => line.includes("84% remaining"));
+  assert.ok(quotaLine);
+  assert.ok(contextLine);
+  const quotaBar = quotaLine.match(/[█░]+/u)?.[0];
+  const contextBar = contextLine.match(/[█░]+/u)?.[0];
+  assert.equal([...quotaBar].length, 10);
+  assert.equal([...contextBar].length, 10);
+  assert.equal([...quotaBar].filter((segment) => segment === "█").length, 7);
+  assert.equal([...contextBar].filter((segment) => segment === "█").length, 8);
+  assert.doesNotMatch(output, /\u001b\[/);
+});
+
+test("renders deterministic 0, 50, and 100 percent bar boundaries", () => {
+  const output = renderReport({
+    generatedAt: "2026-08-18T00:00:00.000Z",
+    buckets: [
+      {
+        id: "boundaries",
+        name: "한글 bucket",
+        rateLimitReachedType: null,
+        spendControlReached: false,
+        windows: [
+          {
+            label: "empty",
+            remainingPercent: 0,
+            resetsAt: null,
+            durationMinutes: 1,
+            projection: null,
+          },
+          {
+            label: "half",
+            remainingPercent: 50,
+            resetsAt: null,
+            durationMinutes: 2,
+            projection: null,
+          },
+          {
+            label: "full",
+            remainingPercent: 100,
+            resetsAt: null,
+            durationMinutes: 3,
+            projection: null,
+          },
+        ],
+      },
+    ],
+    resetCredits: null,
+    tokenActivity: null,
+    session: { available: false },
+    diagnoses: [{ severity: "ok", message: "No immediate pressure." }],
+    recommendations: ["Continue."],
+    dataQuality: ["Synthetic test."],
+  });
+  const meterLines = output.split("\n").filter((line) => line.includes("% remaining"));
+  assert.equal(meterLines[0], "  ░░░░░░░░░░    0% remaining");
+  assert.equal(meterLines[1], "  █████░░░░░   50% remaining");
+  assert.equal(meterLines[2], "  ██████████  100% remaining");
+  assert.match(output, /한글 bucket · empty/);
 });
 
 test("explains the baseline adjustment in rendered context", () => {
@@ -513,8 +612,12 @@ test("explains the baseline adjustment in rendered context", () => {
     recommendations: ["Continue."],
     dataQuality: ["Synthetic test."],
   });
-  assert.match(output, /97% remaining after Codex's 12,000-token baseline/);
-  assert.match(output, /Token activity \(not quota\)/);
+  assert.match(output, /97% remaining/);
+  assert.match(output, /Baseline\s+12,000 tokens reserved by Codex/);
+  assert.match(
+    output,
+    /ACCOUNT\n  Token activity\s+700 over the latest 7 reported days · not quota/,
+  );
 });
 
 test("does not diagnose missing data as healthy", async () => {
