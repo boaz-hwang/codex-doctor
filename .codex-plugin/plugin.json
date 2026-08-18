@@ -1,0 +1,43 @@
+{
+  "name": "codex-doctor",
+  "version": "0.1.0",
+  "description": "Diagnose Codex quota windows, context pressure, session health, and burn pace.",
+  "author": {
+    "name": "Boaz Hwang",
+    "email": "hkc7180@gmail.com",
+    "url": "https://github.com/boaz-hwang"
+  },
+  "homepage": "https://github.com/boaz-hwang/codex-doctor#readme",
+  "repository": "https://github.com/boaz-hwang/codex-doctor",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "quota",
+    "context-window",
+    "diagnostics",
+    "usage"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Codex Doctor",
+    "shortDescription": "Codex quota and session health",
+    "longDescription": "Inspect live quota windows, account token activity, context pressure, session age, burn pace, and evidence-based next actions without changing account or project data.",
+    "developerName": "Boaz Hwang",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only diagnostics",
+      "Local execution"
+    ],
+    "websiteURL": "https://github.com/boaz-hwang/codex-doctor",
+    "privacyPolicyURL": "https://github.com/boaz-hwang/codex-doctor/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/boaz-hwang/codex-doctor/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "Check how much Codex usage I have left.",
+      "Should I start a new Codex session now?",
+      "Will my current quota pace last until reset?"
+    ],
+    "brandColor": "#14B8A6",
+    "composerIcon": "./assets/composer-icon.png",
+    "logo": "./assets/logo.png"
+  }
+}
