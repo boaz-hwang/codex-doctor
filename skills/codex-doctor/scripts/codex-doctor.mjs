@@ -370,7 +370,7 @@ export async function fetchAppServerData({ env = process.env } = {}) {
         clientInfo: {
           name: "codex_doctor",
           title: "Codex Doctor",
-          version: "0.2.0",
+          version: "0.2.1",
         },
         capabilities: { experimentalApi: false },
       },

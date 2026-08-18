@@ -11,7 +11,7 @@ Generate a health report from Codex's read-only app-server account APIs and the 
 
 1. Resolve `<skill-dir>` to the directory containing this `SKILL.md`.
 2. Run `node <skill-dir>/scripts/codex-doctor.mjs` from the user's current working directory.
-3. Return the report to the user. Lead with the first suggested action when it is urgent; otherwise preserve the report's `Usage`, `Session`, `Burn pace`, `Diagnosis`, and `Suggested action` sections.
+3. Return the script's complete stdout verbatim in a fenced `text` block so its meters and alignment are preserved. Do not rewrite, reflow, translate, or omit the report. If the first suggested action is urgent, lead with one sentence and then include the full unchanged report.
 4. Keep unavailable data unavailable. Never invent a 5-hour, weekly, or other window that the service did not return, and never equate account token activity with quota consumption.
 
 Do not add a cause or action that the generated `Diagnosis` and `Suggested action` do not support. Model and reasoning fields are descriptive: do not claim they caused quota use or that changing them will save quota. Mention an alternative quota bucket only when the generated suggestion does so.

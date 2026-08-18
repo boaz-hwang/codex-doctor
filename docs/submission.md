@@ -1,6 +1,6 @@
 # OpenAI Plugin Submission Notes
 
-Prepared for the skills-only Codex Doctor plugin, version 0.2.0.
+Prepared for the skills-only Codex Doctor plugin, version 0.2.1.
 
 ## Listing
 
@@ -79,6 +79,6 @@ Prepared for the skills-only Codex Doctor plugin, version 0.2.0.
 
 ## Initial release notes
 
-Initial skills-only submission of Codex Doctor 0.2.0. The plugin reads official Codex app-server account endpoints, inspects only the active local session for session-health metadata, supports dynamic multi-bucket quota windows, renders quota and context as fixed 10-cell remaining-capacity meters, distinguishes token activity from quota, and returns evidence-scoped recommendations. No MCP server or reviewer credentials are required.
+Initial skills-only submission of Codex Doctor 0.2.1. The plugin reads official Codex app-server account endpoints, inspects only the active local session for session-health metadata, supports dynamic multi-bucket quota windows, preserves its fixed 10-cell quota and context meters in returned terminal reports, distinguishes token activity from quota, and returns evidence-scoped recommendations. No MCP server or reviewer credentials are required.
 
 The real output screenshot is published in the GitHub README only. It is intentionally not included as a submission screenshot because this skills-only plugin has no custom MCP UI.

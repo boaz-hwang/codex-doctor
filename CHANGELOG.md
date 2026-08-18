@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-08-18
+
+- Preserve the complete terminal report verbatim when Codex returns skill output.
+
 ## 0.2.0 - 2026-08-18
 
 - Redesign the terminal report around fixed 10-cell remaining-capacity meters.

@@ -1,6 +1,6 @@
 {
   "name": "codex-doctor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Diagnose Codex quota windows, context pressure, session health, and burn pace.",
   "author": {
     "name": "Boaz Hwang",
