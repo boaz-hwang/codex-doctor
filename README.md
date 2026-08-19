@@ -5,7 +5,7 @@
 
 Codex Doctor is a local, read-only Codex skill that explains quota windows, context pressure, session age, token activity, and burn pace—then recommends the next action supported by the available evidence.
 
-![Codex Doctor report showing usage, session health, burn pace, diagnosis, and a suggested action](assets/codex-doctor-output.png)
+![Codex Doctor terminal report with horizontal quota and context meters](assets/codex-doctor-output.png)
 
 ## What it reports
 
