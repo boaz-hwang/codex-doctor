@@ -8,4 +8,4 @@ The plugin provides informational diagnostics based on data available from the u
 
 Users are responsible for installing and operating the plugin, reviewing its output, and complying with the terms that apply to their Codex and OpenAI accounts. The software is provided "as is," without warranties or liability, to the fullest extent permitted by law.
 
-Questions about these terms can be filed through [GitHub Issues](https://github.com/boaz-hwang/codex-doctor/issues) or sent to [hkc7180@gmail.com](mailto:hkc7180@gmail.com).
+Questions about these terms can be filed through [GitHub Issues](https://github.com/boaz-hwang/codex-usage/issues) or sent to [hkc7180@gmail.com](mailto:hkc7180@gmail.com).

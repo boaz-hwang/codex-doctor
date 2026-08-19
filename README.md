@@ -1,6 +1,6 @@
 # Codex Doctor
 
-[![Tests](https://github.com/boaz-hwang/codex-doctor/actions/workflows/test.yml/badge.svg)](https://github.com/boaz-hwang/codex-doctor/actions/workflows/test.yml)
+[![Tests](https://github.com/boaz-hwang/codex-usage/actions/workflows/test.yml/badge.svg)](https://github.com/boaz-hwang/codex-usage/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Codex Doctor is a local, read-only Codex skill that explains quota windows, context pressure, session age, token activity, and burn pace—then recommends the next action supported by the available evidence.
@@ -22,7 +22,7 @@ Codex Doctor uses the official Codex app-server account APIs first and falls bac
 Until the plugin is available in the universal Plugins Directory, install the standalone skill from this repository:
 
 ```bash
-git clone https://github.com/boaz-hwang/codex-doctor.git "$HOME/.local/share/codex-doctor"
+git clone https://github.com/boaz-hwang/codex-usage.git "$HOME/.local/share/codex-doctor"
 mkdir -p "$HOME/.agents/skills"
 ln -s "$HOME/.local/share/codex-doctor/skills/codex-doctor" "$HOME/.agents/skills/codex-doctor"
 ```

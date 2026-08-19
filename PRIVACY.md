@@ -26,4 +26,4 @@ Codex Doctor does not share data with the developer or third parties. Users cont
 
 ## Contact
 
-Questions or privacy reports can be filed through [GitHub Issues](https://github.com/boaz-hwang/codex-doctor/issues) or sent to [hkc7180@gmail.com](mailto:hkc7180@gmail.com).
+Questions or privacy reports can be filed through [GitHub Issues](https://github.com/boaz-hwang/codex-usage/issues) or sent to [hkc7180@gmail.com](mailto:hkc7180@gmail.com).

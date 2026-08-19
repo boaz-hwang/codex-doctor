@@ -9,10 +9,10 @@ Prepared for the skills-only Codex Doctor plugin, version 0.2.1.
 - **Developer:** Boaz Hwang
 - **Short description:** Diagnose Codex quota and session health.
 - **Long description:** Inspect live quota windows, account token activity, context pressure, session age, burn pace, and evidence-based next actions without changing account or project data.
-- **Website:** https://github.com/boaz-hwang/codex-doctor
-- **Support:** https://github.com/boaz-hwang/codex-doctor/blob/main/SUPPORT.md
-- **Privacy:** https://github.com/boaz-hwang/codex-doctor/blob/main/PRIVACY.md
-- **Terms:** https://github.com/boaz-hwang/codex-doctor/blob/main/TERMS.md
+- **Website:** https://github.com/boaz-hwang/codex-usage
+- **Support:** https://github.com/boaz-hwang/codex-usage/blob/main/SUPPORT.md
+- **Privacy:** https://github.com/boaz-hwang/codex-usage/blob/main/PRIVACY.md
+- **Terms:** https://github.com/boaz-hwang/codex-usage/blob/main/TERMS.md
 
 ## Starter prompts
 
