@@ -1,4 +1,4 @@
 interface:
   display_name: "Codex Doctor"
   short_description: "Diagnose Codex quota pace and session health"
-  default_prompt: "Use $codex-doctor to inspect my current Codex quota, context, burn pace, and recommended next action."
+  default_prompt: "Use $codex-doctor now: run without planning or a preamble, show stdout unchanged first, and stop unless I asked a question."
