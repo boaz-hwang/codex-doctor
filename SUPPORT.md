@@ -1,6 +1,6 @@
 # Support
 
-Use [GitHub Issues](https://github.com/boaz-hwang/codex-doctor/issues) for bugs, compatibility reports, and feature requests.
+Use [GitHub Issues](https://github.com/boaz-hwang/codex-usage/issues) for bugs, compatibility reports, and feature requests.
 
 Include:
 
